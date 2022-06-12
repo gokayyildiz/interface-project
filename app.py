@@ -14,7 +14,7 @@ def denemeSayfası():
     msg =''
     str1 =''
     str2 =''
-    str3 =''
+    str =''
     if request.method == 'POST' and 'issueTitle' in request.form and 'issueBody' in request.form:
         # Create variables for easy access
         issueTitle = request.form['issueTitle']
@@ -30,18 +30,6 @@ def denemeSayfası():
         str= u"\u2713" if result1==1 else ""
         str1= u"\u2713" if result2==1 else ""
         str2= u"\u2713" if result3==1 else ""
-
-        """resp = {
-            "Roberta":str1,
-            "Bert":str2,
-            "Distilbert":str3
-        }
-
-        return resp"""
-
-        
-
-    
 
 
 
