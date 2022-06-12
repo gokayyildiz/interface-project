@@ -15,6 +15,9 @@ def denemeSayfası():
     str1 =''
     str2 =''
     str =''
+    bugr = ""
+    questionr = ""
+    enhancementr = ""
     if request.method == 'POST' and 'issueTitle' in request.form and 'issueBody' in request.form:
         # Create variables for easy access
         issueTitle = request.form['issueTitle']
@@ -22,18 +25,20 @@ def denemeSayfası():
 
         concanatated = issueTitle + " " + issueBody
 
-        result1 = run_roberta_model(concanatated)
-        result2 = run_bert_model(concanatated)
-        result3 = run_distilbert_model(concanatated)
+        bugr, questionr, enhancementr = run_roberta_model(concanatated)
+        result2 =""# run_bert_model(concanatated)
+        result3 ="" # run_distilbert_model(concanatated)
 
 
-        str= u"\u2713" if result1==1 else ""
+        bugr= u"\u2713" if bugr==1 else ""
+        questionr= u"\u2713" if questionr==1 else ""
+        enhancementr= u"\u2713" if enhancementr==1 else ""
         str1= u"\u2713" if result2==1 else ""
         str2= u"\u2713" if result3==1 else ""
 
 
 
-    return render_template('home.html',  bugr= str, bugb= str1,bugd= str2)
+    return render_template('home.html',  bugr= bugr, questionr = questionr, enhancementr = enhancementr, bugb= str1,bugd= str2)
 
 
 @app.route('/getaBugFrontend', methods=['GET','POST'])

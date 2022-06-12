@@ -34,15 +34,17 @@ def run_roberta_model(issue_text):
 
     alist = []
     alist.append(issue_text)
-    other_tokenizer = RobertaTokenizer("./vocab.json", "./merges.txt")
+    other_tokenizer = RobertaTokenizer("./roberta_bin/vocab.json", "./roberta_bin/merges.txt")
 
     map_location=torch.device('cpu')
 
-    loaded_model = torch.load('./pytorch_roberta_sentiment_trans.bin', map_location)
+    loaded_model_bug = torch.load('./roberta_bin/pytorch_roberta_sentiment_with_30k_bug.bin', map_location)
+    loaded_model_question = torch.load('./roberta_bin/pytorch_roberta_sentiment_with_30k_question.bin', map_location)
+    loaded_model_enhancement = torch.load('./roberta_bin/pytorch_roberta_sentiment_with_30k_enhancement.bin', map_location)
 
     tokens_late_test = other_tokenizer.batch_encode_plus(
         alist,
-        max_length = 256,
+        max_length = 128,
         pad_to_max_length=True,
         truncation=True,
         return_token_type_ids=True
@@ -54,11 +56,33 @@ def run_roberta_model(issue_text):
 
     # get predictions for test data
     with torch.no_grad():
-        pred_late = loaded_model(test_late_seq .to(device), test_late_mask.to(device), test_late_token_id.to(device))
+        pred_late = loaded_model_bug(test_late_seq.to(device), test_late_mask.to(device), test_late_token_id.to(device))
         pred_late = pred_late.detach().cpu().numpy()
-
 
     pred_late = np.argmax(pred_late, axis = 1)
 
-    return pred_late[0]
+    is_bug = pred_late[0]
+
+
+        # get predictions for test data
+    with torch.no_grad():
+        pred_late = loaded_model_question(test_late_seq.to(device), test_late_mask.to(device), test_late_token_id.to(device))
+        pred_late = pred_late.detach().cpu().numpy()
+
+    pred_late = np.argmax(pred_late, axis = 1)
+
+    is_question = pred_late[0]
+
+
+        # get predictions for test data
+    with torch.no_grad():
+        pred_late = loaded_model_enhancement(test_late_seq.to(device), test_late_mask.to(device), test_late_token_id.to(device))
+        pred_late = pred_late.detach().cpu().numpy()
+
+    pred_late = np.argmax(pred_late, axis = 1)
+
+    is_enhancement = pred_late[0]
+
+
+    return is_bug, is_question, is_enhancement
 
