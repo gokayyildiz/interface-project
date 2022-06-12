@@ -11,13 +11,9 @@ app = Flask(__name__)
 
 @app.route('/', methods=['GET','POST'])
 def denemeSayfası():
-    msg =''
-    str1 =''
-    str2 =''
-    str =''
-    bugr = ""
-    questionr = ""
-    enhancementr = ""
+    bugr, questionr, enhancementr = "","",""
+    bugd,questiond,enhancementd = "","",""
+    bugb, questionb, enhancementb = "","",""
     if request.method == 'POST' and 'issueTitle' in request.form and 'issueBody' in request.form:
         # Create variables for easy access
         issueTitle = request.form['issueTitle']
@@ -26,19 +22,25 @@ def denemeSayfası():
         concanatated = issueTitle + " " + issueBody
 
         bugr, questionr, enhancementr = run_roberta_model(concanatated)
-        result2 =""# run_bert_model(concanatated)
-        result3 ="" # run_distilbert_model(concanatated)
+        bugb, questionb, enhancementb = run_bert_model(concanatated)
+        bugd,questiond,enhancementd = run_distilbert_model(concanatated)
+        
 
 
         bugr= u"\u2713" if bugr==1 else ""
         questionr= u"\u2713" if questionr==1 else ""
         enhancementr= u"\u2713" if enhancementr==1 else ""
-        str1= u"\u2713" if result2==1 else ""
-        str2= u"\u2713" if result3==1 else ""
+        bugd= u"\u2713" if bugd==1 else ""
+        questiond= u"\u2713" if questiond==1 else ""
+        enhancementd= u"\u2713" if enhancementd==1 else ""
+        bugb= u"\u2713" if bugb==1 else ""
+        questionb= u"\u2713" if questionb==1 else ""
+        enhancementb= u"\u2713" if enhancementb==1 else ""
+        
 
 
 
-    return render_template('home.html',  bugr= bugr, questionr = questionr, enhancementr = enhancementr, bugb= str1,bugd= str2)
+    return render_template('home.html',  bugr= bugr, questionr = questionr, enhancementr = enhancementr, bugd= bugd, questiond = questiond, enhancementd = enhancementd, bugb= bugb, questionb = questionb, enhancementb = enhancementb)
 
 
 @app.route('/getaBugFrontend', methods=['GET','POST'])
